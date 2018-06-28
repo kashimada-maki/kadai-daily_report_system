@@ -15,49 +15,53 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+@Table(name = "reports")
+@NamedQueries({
+    @NamedQuery(
+            name = "getAllReports",
+            query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
+            ),
+    @NamedQuery(
+            name = "getReportsCount",
+            query = "SELECT COUNT(r) FROM Report AS r"
+            ),
+    @NamedQuery(
+            name = "getMyAllReports",
+            query = "SELECT r FROM Report AS r WHERE r.employee = :employee ORDER BY r.id DESC"
+            ),
+    @NamedQuery(
+            name = "getMyReportsCount",
+            query = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :employee"
+            )
+})
+@Entity
+public class Report {
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = false)
+    private Employee employee;
 
- @Table(name = "reports")
- @NamedQueries({
-     @NamedQuery(
-             name="getAllReports",
-             query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
-             ),
-     @NamedQuery(
-             name = "getRsportsCount",
-             query = "SELECT COUNT(r) FROM Report AS r"
-      ),
- })
+    @Column(name = "report_date", nullable = false)
+    private Date report_date;
 
- @Entity
- public class Report{
-     @Id
-     @Column(name = "id")
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private Integer id;
+    @Column(name = "title", length = 255, nullable = false)
+    private String title;
 
-     @ManyToOne
-     @JoinColumn(name = "employee_id", nullable = false)
-     private Employee employee;
+    @Lob
+    @Column(name = "content", nullable = false)
+    private String content;
 
-     @Column(name = "name = report_date", nullable = false)
-     private Date report_date;
+    @Column(name = "created_at", nullable = false)
+    private Timestamp created_at;
 
-     @Column(name = "title",length = 255,nullable = false)
-     private String title;
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updated_at;
 
-     @Lob
-     @Column(name = "content" , nullable = false)
-     private String content;
-
-     @Column(name = "created_at" , nullable = false)
-     private Timestamp created_at;
-
-     @Column(name = "updated_at" , nullable = false)
-     private Timestamp updated_at;
-
-
-     public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -112,4 +116,4 @@ import javax.persistence.Table;
     public void setUpdated_at(Timestamp updated_at) {
         this.updated_at = updated_at;
     }
- }
+}
